@@ -1,0 +1,74 @@
+
+Drawbridge INSTALL
+ $Id: INSTALLATION,v 1.1 2000/05/15 20:09:26 vwelch Exp $
+
+
+INSTALLATION
+
+  -Copy drawbridge to it's permanent location, for example:
+   "/usr/local/etc/drawbridge"
+
+
+  -Edit drawbridge itself. The first section "Configurable parameters"
+   has a number of parameters you will probably want to set.
+
+
+  -Create an empty state file by touching it. The state file is the
+   file described by STATE_FILE_NAME under the Configurable parameters
+   section in drawbridge. For example if drawbridge has:
+
+	$STATE_FILE_NAME = "/usr/local/etc/drawbridge.state";
+
+   then
+	touch /usr/local/etc/drawbridge.state.
+
+   [Yes, I'm planning to fix this...]
+
+
+  -Edit your hosts.allow file to have an entry for any hosts you want
+   to use drawbridge. For example:
+
+	ALL: otherhost.somewhere.edu : \
+	     twist = /usr/local/etc/drawbridge knock %h %d
+  
+   This would put drawbridge in control of access to all daemons for
+   otherhost.somewhere.edu.
+
+ 
+  -Test. For example, assuming you set it up as above:
+	
+	<Try to access myhost, should fail...>
+	otherhost% telnet myhost
+	Trying 10.10.10.10 ...
+	Connected to myhost.somewhere.edu.
+	Escape character is '^]'.
+	Connection closed by foreign host.
+	
+	<Then my myhost...>
+	myhost% drawbridge add myhost
+	myhost% drawbridge dump
+	otherhost.somewhere.edu 1 connection.
+	
+	<Then back on otherhost, this should work now...>
+	otherhost% telnet myhost
+	Trying 10.10.10.10 ...
+	Connected to myhost.somewhere.edu.
+	Escape character is '^]'.
+	
+	Welcome to myhost.
+
+	login:
+
+	<Then try again and it should fail...>
+	otherhost% telnet myhost
+	Trying 10.10.10.10 ...
+	Connected to myhost.somewhere.edu.
+	Escape character is '^]'.
+	Connection closed by foreign host.
+	
+
+   -For help enter 'drawbridge help'
+
+
+
+	
